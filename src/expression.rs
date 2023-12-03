@@ -31,7 +31,7 @@ macro_rules! ternary {
 macro_rules! then {
     ($c:expr, $v:expr) => {
         if $c {
-            $v
+            $v;
         }
     };
 }
