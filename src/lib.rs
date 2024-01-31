@@ -1,5 +1,5 @@
-pub mod expression;
-pub mod file;
-pub mod format;
-pub mod function;
-pub mod interface;
+pub mod exp;
+pub mod fmt;
+pub mod fnc;
+pub mod fs;
+pub mod obj;

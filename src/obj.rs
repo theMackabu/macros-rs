@@ -1,5 +1,6 @@
+#[doc(hidden)]
 #[macro_export]
-macro_rules! scaffold {
+macro_rules! _lib_scaffold {
   (pub struct $name:ident { $($field:ident: $type:ty),* $(,)? }) => {
     impl $name {
       #[allow(dead_code, unused)]
@@ -25,8 +26,9 @@ macro_rules! scaffold {
   };
 }
 
+#[doc(hidden)]
 #[macro_export]
-macro_rules! derive {
+macro_rules! _lib_derive {
   (pub struct $name:ident { $($field:ident: $type:ty),* $(,)? }) => {
     #[derive(Clone, Debug, serde_derive::Deserialize, serde_derive::Serialize)]
     struct $name {
@@ -35,9 +37,19 @@ macro_rules! derive {
   };
 }
 
+#[doc(hidden)]
 #[macro_export]
-macro_rules! clone {
+macro_rules! _lib_clone {
     ($obj:expr) => {
         $obj.clone()
     };
 }
+
+#[doc(inline)]
+pub use _lib_scaffold as scaffold;
+
+#[doc(inline)]
+pub use _lib_derive as derive;
+
+#[doc(inline)]
+pub use _lib_clone as clone;

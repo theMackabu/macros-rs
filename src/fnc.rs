@@ -1,22 +1,20 @@
+#[doc(hidden)]
 #[macro_export]
-macro_rules! function_path {
+macro_rules! _lib_fn_path {
     () => {{
         fn f() {}
-        fn t<T>(_: T) -> &'static str {
-            std::any::type_name::<T>()
-        }
+        fn t<T>(_: T) -> &'static str { std::any::type_name::<T>() }
         let n = t(f);
         &n[..n.len() - 3]
     }};
 }
 
+#[doc(hidden)]
 #[macro_export]
-macro_rules! function_name {
+macro_rules! _lib_fn_name {
     () => {{
         fn f() {}
-        fn t<T>(_: T) -> &'static str {
-            std::any::type_name::<T>()
-        }
+        fn t<T>(_: T) -> &'static str { std::any::type_name::<T>() }
         let n = t(f);
         let v = &n[..n.len() - 3];
 
@@ -38,3 +36,9 @@ macro_rules! function_name {
         }
     }};
 }
+
+#[doc(inline)]
+pub use _lib_fn_name as function_name;
+
+#[doc(inline)]
+pub use _lib_fn_name as function_path;

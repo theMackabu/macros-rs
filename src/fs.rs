@@ -11,30 +11,46 @@ impl<'p> Exists<'p> {
     pub fn empty(&self) -> bool { fs::metadata(Path::new(self.path)).map(|m| m.len() == 0).unwrap_or(true) }
 }
 
+#[doc(hidden)]
 #[macro_export]
-macro_rules! file_exists {
+macro_rules! _lib_file_exists {
     ($path: expr) => {
         $crate::file::Exists::check($path).file()
     };
 }
 
+#[doc(hidden)]
 #[macro_export]
-macro_rules! folder_exists {
+macro_rules! _lib_folder_exists {
     ($path: expr) => {
         $crate::file::Exists::check($path).folder()
     };
 }
 
+#[doc(hidden)]
 #[macro_export]
-macro_rules! path_empty {
+macro_rules! _lib_path_empty {
     ($path: expr) => {
         $crate::file::Exists::check($path).empty()
     };
 }
 
+#[doc(hidden)]
 #[macro_export]
-macro_rules! exists {
+macro_rules! _lib_exists {
     ($path: expr) => {
         $crate::file::Exists::check($path)
     };
 }
+
+#[doc(inline)]
+pub use _lib_file_exists as file_exists;
+
+#[doc(inline)]
+pub use _lib_folder_exists as folder_exists;
+
+#[doc(inline)]
+pub use _lib_path_empty as path_empty;
+
+#[doc(inline)]
+pub use _lib_exists as exists;
