@@ -30,7 +30,7 @@ macro_rules! _lib_scaffold {
 #[macro_export]
 macro_rules! _lib_derive {
   (pub struct $name:ident { $($field:ident: $type:ty),* $(,)? }) => {
-    #[derive(Clone, Debug, serde_derive::Deserialize, serde_derive::Serialize)]
+    #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
     struct $name {
       $($field: $type),*
     }

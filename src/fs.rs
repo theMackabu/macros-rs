@@ -15,7 +15,7 @@ impl<'p> Exists<'p> {
 #[macro_export]
 macro_rules! _lib_file_exists {
     ($path: expr) => {
-        $crate::file::Exists::check($path).file()
+        $crate::fs::Exists::check($path).file()
     };
 }
 
@@ -23,7 +23,7 @@ macro_rules! _lib_file_exists {
 #[macro_export]
 macro_rules! _lib_folder_exists {
     ($path: expr) => {
-        $crate::file::Exists::check($path).folder()
+        $crate::fs::Exists::check($path).folder()
     };
 }
 
@@ -31,7 +31,7 @@ macro_rules! _lib_folder_exists {
 #[macro_export]
 macro_rules! _lib_path_empty {
     ($path: expr) => {
-        $crate::file::Exists::check($path).empty()
+        $crate::fs::Exists::check($path).empty()
     };
 }
 
@@ -39,7 +39,7 @@ macro_rules! _lib_path_empty {
 #[macro_export]
 macro_rules! _lib_exists {
     ($path: expr) => {
-        $crate::file::Exists::check($path)
+        $crate::fs::Exists::check($path)
     };
 }
 

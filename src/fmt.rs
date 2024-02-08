@@ -1,4 +1,7 @@
 #[doc(hidden)]
+pub use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+
+#[doc(hidden)]
 #[macro_export]
 macro_rules! _lib_string {
     () => {
@@ -32,8 +35,7 @@ macro_rules! _lib_fmtstr {
 macro_rules! _lib_error {
     ($($arg:tt)*) => {{
         use std::io::Write;
-        use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-
+        use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
         let mut stderr = StandardStream::stderr(ColorChoice::Always);
         stderr.set_color(ColorSpec::new().set_fg(Some(Color::Red))).expect("Unable to write to stderr (file handle closed?)");
         write!(&mut stderr, $($arg)*).expect("Unable to write to stderr (file handle closed?)");
@@ -45,8 +47,7 @@ macro_rules! _lib_error {
 macro_rules! _lib_errorln {
     ($($arg:tt)*) => {{
         use std::io::Write;
-        use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-
+        use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
         let mut stderr = StandardStream::stderr(ColorChoice::Always);
         stderr.set_color(ColorSpec::new().set_fg(Some(Color::Red))).expect("Unable to write to stderr (file handle closed?)");
         writeln!(&mut stderr, $($arg)*).expect("Unable to write to stderr (file handle closed?)");
@@ -58,8 +59,7 @@ macro_rules! _lib_errorln {
 macro_rules! _lib_crash {
     ($($arg:tt)*) => {{
         use std::io::Write;
-        use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-
+        use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
         let mut stderr = StandardStream::stderr(ColorChoice::Always);
         stderr.set_color(ColorSpec::new().set_fg(Some(Color::Red))).expect("Unable to write to stderr (file handle closed?)");
         write!(&mut stderr, $($arg)*).expect("Unable to write to stderr (file handle closed?)");
@@ -72,8 +72,7 @@ macro_rules! _lib_crash {
 macro_rules! _lib_crashln {
     ($($arg:tt)*) => {{
         use std::io::Write;
-        use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-
+        use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
         let mut stderr = StandardStream::stderr(ColorChoice::Always);
         stderr.set_color(ColorSpec::new().set_fg(Some(Color::Red))).expect("Unable to write to stderr (file handle closed?)");
         writeln!(&mut stderr, $($arg)*).expect("Unable to write to stderr (file handle closed?)");
