@@ -4,6 +4,10 @@ pub mod fnc;
 pub mod fs;
 pub mod obj;
 
+/// Enable actix-web macros
+#[cfg(feature = "actix-web")]
+pub mod actix;
+
 #[cfg(test)]
 mod tests {
     #[test]
@@ -91,4 +95,53 @@ mod tests {
 
     #[test]
     fn path_content() { assert_eq!(crate::fs::path_empty!("tests/file.txt"), false) }
+
+    #[actix_web::test]
+    #[cfg(feature = "actix-web")]
+    async fn actix_web_html() {
+        use actix_http::{HttpService, Request};
+        use actix_http_test::test_server;
+        use actix_utils::future::ok;
+        use actix_web::http::header::HeaderValue;
+        use std::convert::Infallible;
+
+        let mut srv = test_server(|| {
+            HttpService::build()
+                .h1(|req: Request| {
+                    assert!(req.peer_addr().is_some());
+                    ok::<_, Infallible>(crate::actix::send_html!().finish())
+                })
+                .tcp()
+        })
+        .await;
+
+        let response = srv.get("/").send().await.unwrap();
+        assert_eq!(response.headers().get("Content-Type"), Some(&HeaderValue::from_static("text/html; charset=utf-8")));
+
+        srv.stop().await;
+    }
+
+    #[actix_web::test]
+    #[cfg(feature = "actix-web")]
+    async fn actix_web_ok() {
+        use actix_http::{HttpService, Request};
+        use actix_http_test::test_server;
+        use actix_utils::future::ok;
+        use std::convert::Infallible;
+
+        let mut srv = test_server(|| {
+            HttpService::build()
+                .h1(|req: Request| {
+                    assert!(req.peer_addr().is_some());
+                    ok::<_, Infallible>(crate::actix::ok!().finish())
+                })
+                .tcp()
+        })
+        .await;
+
+        let response = srv.get("/").send().await.unwrap();
+        assert!(response.status().is_success());
+
+        srv.stop().await;
+    }
 }
