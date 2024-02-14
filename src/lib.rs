@@ -78,6 +78,17 @@ mod tests {
     }
 
     #[test]
+    fn crash_test_facade() {
+        use colored::Colorize;
+        use std::io::Write;
+
+        write!(&mut std::io::stdout(), "-------------------------\n").unwrap();
+        crate::fmt::error!("error! {} {}", "print-test".bright_white(), "ok\n".green());
+        crate::fmt::errorln!("errorln! {} {}", "print-test".bright_white(), "ok".green());
+        write!(&mut std::io::stdout(), "-------------------------\n\n").unwrap();
+    }
+
+    #[test]
     fn clone() {
         let var: String = Default::default();
 

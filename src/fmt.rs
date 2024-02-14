@@ -1,4 +1,5 @@
 #[doc(hidden)]
+#[cfg(feature = "color")]
 pub use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 #[doc(hidden)]
@@ -35,9 +36,16 @@ macro_rules! _lib_fmtstr {
 macro_rules! _lib_error {
     ($($arg:tt)*) => {{
         use std::io::Write;
-        use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-        let mut stderr = StandardStream::stderr(ColorChoice::Always);
-        stderr.set_color(ColorSpec::new().set_fg(Some(Color::Red))).expect("Unable to write to stderr (file handle closed?)");
+        let mut stderr;
+        cfg_if::cfg_if! {
+            if #[cfg(feature = "color")] {
+                use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+                stderr = StandardStream::stderr(ColorChoice::Always);
+                stderr.set_color(ColorSpec::new().set_fg(Some(Color::Red))).expect("Unable to write to stderr (file handle closed?)");
+            } else {
+                stderr = std::io::stderr();
+            }
+        }
         write!(&mut stderr, $($arg)*).expect("Unable to write to stderr (file handle closed?)");
     }};
 }
@@ -47,9 +55,16 @@ macro_rules! _lib_error {
 macro_rules! _lib_errorln {
     ($($arg:tt)*) => {{
         use std::io::Write;
-        use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-        let mut stderr = StandardStream::stderr(ColorChoice::Always);
-        stderr.set_color(ColorSpec::new().set_fg(Some(Color::Red))).expect("Unable to write to stderr (file handle closed?)");
+        let mut stderr;
+        cfg_if::cfg_if! {
+            if #[cfg(feature = "color")] {
+                use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+                stderr = StandardStream::stderr(ColorChoice::Always);
+                stderr.set_color(ColorSpec::new().set_fg(Some(Color::Red))).expect("Unable to write to stderr (file handle closed?)");
+            } else {
+                stderr = std::io::stderr();
+            }
+        }
         writeln!(&mut stderr, $($arg)*).expect("Unable to write to stderr (file handle closed?)");
     }};
 }
@@ -59,9 +74,16 @@ macro_rules! _lib_errorln {
 macro_rules! _lib_crash {
     ($($arg:tt)*) => {{
         use std::io::Write;
-        use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-        let mut stderr = StandardStream::stderr(ColorChoice::Always);
-        stderr.set_color(ColorSpec::new().set_fg(Some(Color::Red))).expect("Unable to write to stderr (file handle closed?)");
+        let mut stderr;
+        cfg_if::cfg_if! {
+            if #[cfg(feature = "color")] {
+                use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+                stderr = StandardStream::stderr(ColorChoice::Always);
+                stderr.set_color(ColorSpec::new().set_fg(Some(Color::Red))).expect("Unable to write to stderr (file handle closed?)");
+            } else {
+                stderr = std::io::stderr();
+            }
+        }
         write!(&mut stderr, $($arg)*).expect("Unable to write to stderr (file handle closed?)");
         std::process::exit(1);
     }};
@@ -72,9 +94,16 @@ macro_rules! _lib_crash {
 macro_rules! _lib_crashln {
     ($($arg:tt)*) => {{
         use std::io::Write;
-        use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-        let mut stderr = StandardStream::stderr(ColorChoice::Always);
-        stderr.set_color(ColorSpec::new().set_fg(Some(Color::Red))).expect("Unable to write to stderr (file handle closed?)");
+        let mut stderr;
+        cfg_if::cfg_if! {
+            if #[cfg(feature = "color")] {
+                use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+                stderr = StandardStream::stderr(ColorChoice::Always);
+                stderr.set_color(ColorSpec::new().set_fg(Some(Color::Red))).expect("Unable to write to stderr (file handle closed?)");
+            } else {
+                stderr = std::io::stderr();
+            }
+        }
         writeln!(&mut stderr, $($arg)*).expect("Unable to write to stderr (file handle closed?)");
         std::process::exit(1);
     }};

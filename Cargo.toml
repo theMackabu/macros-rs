@@ -1,16 +1,19 @@
 [package]
 name = "macros-rs"
-version = "1.1.1"
+version = "1.1.2"
 edition = "2021"
 license = "MIT"
 description = "fluffy, simple & useful macros"
 repository = "https://git.furry.win/crates/macros"
 
 [dependencies]
-termcolor = "1"
+cfg-if = "1"
+termcolor = { version="1", optional = true }
 actix-web = { version="4", optional = true }
 
 [features]
+default = ["color"]
+color = ["dep:termcolor"]
 actix-web = ["dep:actix-web"]
 
 [dev-dependencies]
@@ -18,4 +21,5 @@ actix-web = "4.5.1"
 actix-http = "3.6.0"
 actix-utils = "3.0.1"
 actix-http-test = "3.2.0"
+colored = "2.1.0"
 
