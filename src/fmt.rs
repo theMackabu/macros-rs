@@ -37,7 +37,7 @@ macro_rules! _lib_error {
     ($($arg:tt)*) => {{
         use std::io::Write;
         let mut stderr;
-        cfg_if::cfg_if! {
+        $crate::cfg_if! {
             if #[cfg(feature = "color")] {
                 use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
                 stderr = StandardStream::stderr(ColorChoice::Always);
@@ -56,7 +56,7 @@ macro_rules! _lib_errorln {
     ($($arg:tt)*) => {{
         use std::io::Write;
         let mut stderr;
-        cfg_if::cfg_if! {
+        $crate::cfg_if! {
             if #[cfg(feature = "color")] {
                 use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
                 stderr = StandardStream::stderr(ColorChoice::Always);
@@ -75,7 +75,7 @@ macro_rules! _lib_crash {
     ($($arg:tt)*) => {{
         use std::io::Write;
         let mut stderr;
-        cfg_if::cfg_if! {
+        $crate::cfg_if! {
             if #[cfg(feature = "color")] {
                 use $crate::fmt::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
                 stderr = StandardStream::stderr(ColorChoice::Always);
