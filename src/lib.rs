@@ -3,6 +3,7 @@ pub mod fmt;
 pub mod fnc;
 pub mod fs;
 pub mod obj;
+pub mod os;
 
 /// Enable actix-web macros
 #[cfg(feature = "actix-web")]
@@ -57,6 +58,27 @@ mod tests {
     #[test]
     fn str() {
         assert_eq!(crate::fmt::str!("something".to_string()), "something");
+    }
+
+    #[test]
+    fn set_env() {
+        let mut rng = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos() as u64;
+
+        let test_value = std::iter::repeat_with(|| {
+            rng = rng.wrapping_mul(0x5DEECE66D).wrapping_add(11) & ((1 << 48) - 1);
+            let byte = (rng >> 24) as u8;
+
+            match byte % 3 {
+                0 => (b'A' + (byte % 26)) as char,
+                1 => (b'a' + (byte % 26)) as char,
+                _ => (b'0' + (byte % 10)) as char,
+            }
+        })
+        .take(16)
+        .collect::<String>();
+
+        crate::os::set_env_sync!(MACROS_ENV_1 = test_value.clone());
+        assert_eq!(std::env::var("MACROS_ENV_1"), Ok(test_value));
     }
 
     #[test]
