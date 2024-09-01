@@ -66,7 +66,7 @@ macro_rules! __lazy_lock_internal {
     ($(#[$attr:meta])* ($($vis:tt)*) static $N:ident : $T:ty = $e:expr; $($t:tt)*) => {
         $(#[$attr])*
         $($vis)* static $N: std::sync::LazyLock<$T> = std::sync::LazyLock::new(|| $e);
-        crate::obj::lazy_lock!($($t)*);
+        $crate::obj::lazy_lock!($($t)*);
     };
     () => ()
 }
