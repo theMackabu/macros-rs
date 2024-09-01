@@ -9,6 +9,19 @@ pub mod os;
 #[cfg(feature = "actix-web")]
 pub mod actix;
 
+/// Enable everything
+pub mod everything {
+    pub use super::exp::*;
+    pub use super::fmt::*;
+    pub use super::fnc::*;
+    pub use super::fs::*;
+    pub use super::obj::*;
+    pub use super::os::*;
+
+    #[cfg(feature = "actix-web")]
+    pub use super::actix::*;
+}
+
 #[cfg(test)]
 mod tests {
     #[test]
