@@ -131,6 +131,15 @@ mod tests {
     }
 
     #[test]
+    fn lazy_lock() {
+        crate::obj::lazy_lock! {
+            static TEST: String = Default::default();
+        }
+
+        assert_eq!(&*TEST, "");
+    }
+
+    #[test]
     fn file_exists() { assert_eq!(crate::fs::file_exists!("tests/file.txt"), true) }
 
     #[test]

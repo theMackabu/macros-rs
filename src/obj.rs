@@ -45,6 +45,32 @@ macro_rules! _lib_clone {
     };
 }
 
+#[doc(hidden)]
+#[macro_export]
+macro_rules! _lib_lazy_lock {
+    ($(#[$attr:meta])* static $N:ident : $T:ty = $e:expr; $($t:tt)*) => {
+        $crate::__lazy_lock_internal!($(#[$attr])* () static $N : $T = $e; $($t)*);
+    };
+    ($(#[$attr:meta])* pub static $N:ident : $T:ty = $e:expr; $($t:tt)*) => {
+        $crate::__lazy_lock_internal!($(#[$attr])* (pub) static $N : $T = $e; $($t)*);
+    };
+    ($(#[$attr:meta])* pub ($($vis:tt)+) static $N:ident : $T:ty = $e:expr; $($t:tt)*) => {
+        $crate::__lazy_lock_internal!($(#[$attr])* (pub ($($vis)+)) static $N : $T = $e; $($t)*);
+    };
+    () => ()
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __lazy_lock_internal {
+    ($(#[$attr:meta])* ($($vis:tt)*) static $N:ident : $T:ty = $e:expr; $($t:tt)*) => {
+        $(#[$attr])*
+        $($vis)* static $N: std::sync::LazyLock<$T> = std::sync::LazyLock::new(|| $e);
+        crate::obj::lazy_lock!($($t)*);
+    };
+    () => ()
+}
+
 #[doc(inline)]
 pub use _lib_scaffold as scaffold;
 
@@ -53,3 +79,6 @@ pub use _lib_derive as derive;
 
 #[doc(inline)]
 pub use _lib_clone as clone;
+
+#[doc(inline)]
+pub use _lib_lazy_lock as lazy_lock;
