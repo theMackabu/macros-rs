@@ -34,11 +34,21 @@ macro_rules! _lib_fmtstr {
 #[doc(hidden)]
 #[macro_export]
 macro_rules! _fmt_writer {
-    ($func:ident, $handle:expr, crash($crash:expr), $($arg:tt)*) => {{
+    ($func:ident, $handle:expr, $($arg:tt)*) => {{
         use std::io::Write;
         let result = $func!(&mut $handle, $($arg)*);
         result.expect("Unable to write to handle (file handle closed?)");
-        if $crash { std::process::exit(1) }
+    }};
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! _fmt_writer_crash {
+    ($func:ident, $handle:expr, $($arg:tt)*) => {{
+        use std::io::Write;
+        let result = $func!(&mut $handle, $($arg)*);
+        result.expect("Unable to write to handle (file handle closed?)");
+        std::process::exit(1)
     }};
 }
 
@@ -68,7 +78,7 @@ macro_rules! _io_stderr {
 #[cfg(not(feature = "color"))]
 macro_rules! _lib_error {
     ($($arg:tt)*) => {
-        $crate::_fmt_writer!(write, $crate::_io_stderr!(), crash(false), $($arg)*)
+        $crate::_fmt_writer!(write, $crate::_io_stderr!(), $($arg)*)
     };
 }
 
@@ -77,7 +87,7 @@ macro_rules! _lib_error {
 #[cfg(not(feature = "color"))]
 macro_rules! _lib_errorln {
     ($($arg:tt)*) => {
-        $crate::_fmt_writer!(writeln, $crate::_io_stderr!(), crash(false), $($arg)*)
+        $crate::_fmt_writer!(writeln, $crate::_io_stderr!(), $($arg)*)
     };
 }
 
@@ -86,7 +96,7 @@ macro_rules! _lib_errorln {
 #[cfg(not(feature = "color"))]
 macro_rules! _lib_crash {
     ($($arg:tt)*) => {
-        $crate::_fmt_writer!(write, $crate::_io_stderr!(), crash(true), $($arg)*)
+        $crate::_fmt_writer_crash!(write, $crate::_io_stderr!(), $($arg)*)
     };
 }
 
@@ -95,7 +105,7 @@ macro_rules! _lib_crash {
 #[cfg(not(feature = "color"))]
 macro_rules! _lib_crashln {
     ($($arg:tt)*) => {
-        $crate::_fmt_writer!(writeln, $crate::_io_stderr!(), crash(true), $($arg)*)
+        $crate::_fmt_writer_crash!(writeln, $crate::_io_stderr!(), $($arg)*)
     };
 }
 
@@ -104,7 +114,7 @@ macro_rules! _lib_crashln {
 #[cfg(feature = "color")]
 macro_rules! _lib_error {
     ($($arg:tt)*) => {
-        $crate::_fmt_writer!(write, $crate::_io_stderr!(), crash(false), $($arg)*)
+        $crate::_fmt_writer!(write, $crate::_io_stderr!(), $($arg)*)
     };
 }
 
@@ -113,7 +123,7 @@ macro_rules! _lib_error {
 #[cfg(feature = "color")]
 macro_rules! _lib_errorln {
     ($($arg:tt)*) => {
-        $crate::_fmt_writer!(writeln, $crate::_io_stderr!(), crash(false), $($arg)*)
+        $crate::_fmt_writer!(writeln, $crate::_io_stderr!(), $($arg)*)
     };
 }
 
@@ -122,7 +132,7 @@ macro_rules! _lib_errorln {
 #[cfg(feature = "color")]
 macro_rules! _lib_crash {
     ($($arg:tt)*) => {
-        $crate::_fmt_writer!(write, $crate::_io_stderr!(), crash(true), $($arg)*)
+        $crate::_fmt_writer_crash!(write, $crate::_io_stderr!(), $($arg)*)
     };
 }
 
@@ -131,7 +141,7 @@ macro_rules! _lib_crash {
 #[cfg(feature = "color")]
 macro_rules! _lib_crashln {
     ($($arg:tt)*) => {
-        $crate::_fmt_writer!(writeln, $crate::_io_stderr!(), crash(true), $($arg)*)
+        $crate::_fmt_writer_crash!(writeln, $crate::_io_stderr!(), $($arg)*)
     };
 }
 
