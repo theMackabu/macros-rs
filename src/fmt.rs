@@ -38,7 +38,7 @@ macro_rules! _fmt_writer {
         use std::io::Write;
         let result = $func!(&mut $handle, $($arg)*);
         result.expect("Unable to write to handle (file handle closed?)");
-        if $crash { std::process::exit(1); }
+        if $crash { std::process::exit(1) }
     }};
 }
 
