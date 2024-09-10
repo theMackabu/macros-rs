@@ -42,15 +42,30 @@ macro_rules! _lib_then {
 
 #[doc(hidden)]
 #[macro_export]
+macro_rules! _lib_try {
+    ($expr:expr, $err_handler:expr) => {
+        match $expr {
+            Ok(val) => val,
+            Err(err) => {
+                let handler: fn(_) = $err_handler;
+                handler(err);
+                return Err(err.into());
+            }
+        }
+    };
+}
+
+#[doc(hidden)]
+#[macro_export]
 macro_rules! _lib_attempt {
    (@recurse ($a:expr) { } catch ($e:ident) $b:block) => {
       if let Err ($e) = $a $b
    };
    (@recurse ($a:expr) { $e:expr; $($tail:tt)* } $($handler:tt)*) => {
-      attempt!{@recurse ($a.and_then (|_| $e)) { $($tail)* } $($handler)*}
+      $crate::_lib_attempt!{@recurse ($a.and_then (|_| $e)) { $($tail)* } $($handler)*}
    };
    ({ $e:expr; $($tail:tt)* } $($handler:tt)*) => {
-      attempt!{@recurse ($e) { $($tail)* } $($handler)* }
+      $crate::_lib_attempt!{@recurse ($e) { $($tail)* } $($handler)* }
    };
 }
 
@@ -65,6 +80,9 @@ pub use _lib_ternary as ternary;
 
 #[doc(inline)]
 pub use _lib_then as then;
+
+#[doc(inline)]
+pub use _lib_try as unwrap;
 
 #[doc(inline)]
 pub use _lib_attempt as attempt;
